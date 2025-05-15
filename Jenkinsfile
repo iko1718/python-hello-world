@@ -2,33 +2,35 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Install dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                // Use 'bat' for Windows shell commands
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Run unit tests') {
             steps {
-                sh 'pytest -q --junitxml=pytest-report.xml'
-            }
-            post {
-                always {
-                    junit 'pytest-report.xml'
-                }
+                bat 'pytest'
             }
         }
 
         stage('Package') {
             steps {
-                sh 'tar -czf artifact.tar.gz *.py'
-                archiveArtifacts artifacts: 'artifact.tar.gz', fingerprint: true
+                // Example: zip the files or do packaging steps here
+                bat 'echo Packaging...'
             }
         }
 
         stage('Deploy (stub)') {
             steps {
-                echo '🚀 Here you would call a deploy script'
+                bat 'echo Deploying...'
             }
         }
     }
